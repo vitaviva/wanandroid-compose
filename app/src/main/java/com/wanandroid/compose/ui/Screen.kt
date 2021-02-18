@@ -28,8 +28,17 @@ sealed class Screen(val route: String, @StringRes val resourceId: Int, val icon:
     object Knowledge : Screen("wanandroid/main/knowledget", R.string.knowledge, Icons.Default.Menu)
     object Settings : Screen("wanandroid/settings", R.string.knowledge, Icons.Default.Settings)
     object Favorite : Screen("wanandroid/favorite", R.string.favorite, Icons.Default.Favorite)
-}
 
+    init {
+        _map[route] = this
+    }
+
+    companion object {
+        private val _map: MutableMap<String, Screen> = mutableMapOf()
+
+        fun of(route: String) = _map[route] ?: Home
+    }
+}
 
 class ScreenViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
     var currentScreen: Screen by savedStateHandle.getMutableStateOf<Screen>(

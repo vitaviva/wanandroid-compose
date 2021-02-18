@@ -1,47 +1,78 @@
 package com.wanandroid.compose.ui.main
 
+import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
+import com.wanandroid.compose.ComposeFragment
 import com.wanandroid.compose.ui.Screen
+import com.wanandroid.compose.ui.favorite.Favorite
 import com.wanandroid.compose.ui.home.Home
 import com.wanandroid.compose.ui.knowledge.Knowledge
 import com.wanandroid.compose.ui.theme.WanandroidcomposeTheme
 
 
 @Composable
-fun AppContent(navigateTo: (Screen) -> Unit) {
+fun ComposeFragment.AppContent() {
     WanandroidcomposeTheme {
         // A surface container using the 'background' color from the theme
         Surface(color = MaterialTheme.colors.background) {
 
-            val scaffoldState = rememberScaffoldState()
-            val navController = rememberNavController()
-
             Box {
+
+                val scaffoldState = rememberScaffoldState()
+                val navController = rememberNavController()
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute =
+                    navBackStackEntry?.run { destination.arguments[KEY_ROUTE]?.defaultValue } as? String
+                        ?: ""
+
                 Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = { Text(stringResource(id = Screen.of(currentRoute).resourceId)) },
+                            navigationIcon = {
+                                IconButton(
+                                    onClick = { scaffoldState.drawerState.open() }
+                                ) {
+                                    Icon(Icons.Filled.Menu, "")
+                                }
+                            }
+                        )
+                    },
                     scaffoldState = scaffoldState,
                     drawerContent = {
                         AppDrawer(
-                            navigateTo = { navigateTo(it) },
+                            navigateTo = {
+                                when (it) {
+                                    is Screen.Favorite -> openNewTab { Favorite() }
+                                    else -> error("")
+                                }
+                            },
                             closeDrawer = { scaffoldState.drawerState.close() })
                     },
                     bottomBar = {
-                        BottomNavigation(navController)
+                        BottomNavigation(currentRoute, navController)
                     }
                 ) {
 
+                    val modifier = remember { Modifier.padding(it) }
                     NavHost(navController, startDestination = Screen.Home.route) {
-                        composable(Screen.Home.route) { Home(it, navController) }
-                        composable(Screen.Knowledge.route) { Knowledge(it, navController) }
+                        composable(Screen.Home.route) { Home(modifier, it, navController) }
+                        composable(Screen.Knowledge.route) { Knowledge(modifier,it, navController) }
                     }
 
                 }
@@ -93,7 +124,7 @@ fun AppContent(navigateTo: (Screen) -> Unit) {
 
 
 @Composable
-fun BottomNavigation(navController: NavController) {
+fun BottomNavigation(currentRoute: String, navController: NavController) {
     val items = remember { listOf(Screen.Home, Screen.Knowledge) }
 
     BottomNavigation(
@@ -103,8 +134,6 @@ fun BottomNavigation(navController: NavController) {
 //        backgroundColor = Color.Black,
         contentColor = Color.White,
     ) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.run { destination.arguments[KEY_ROUTE]?.defaultValue }
         items.forEach { screen ->
             BottomNavigationItem(
                 label = { Text(text = stringResource(id = screen.resourceId)) },

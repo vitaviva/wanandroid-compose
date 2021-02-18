@@ -1,3 +1,5 @@
+import com.wanandroid.compose.buildsrc.Libs
+
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
@@ -34,8 +36,8 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion compose_version
-        kotlinCompilerVersion '1.4.21-2'
+        kotlinCompilerExtensionVersion Libs.AndroidX.Compose.version
+        kotlinCompilerVersion Libs.Kotlin.version
     }
 }
 
@@ -44,19 +46,47 @@ dependencies {
 
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.2.1'
-    implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.material:material:$compose_version"
-    implementation "androidx.compose.ui:ui-tooling:$compose_version"
-    implementation "androidx.navigation:navigation-compose:1.0.0-alpha06"
+    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
+    //compose-ui
+    implementation Libs.AndroidX.Compose.ui
+    implementation Libs.AndroidX.Compose.layout
+    implementation Libs.AndroidX.Compose.material
+    implementation Libs.AndroidX.Compose.tooling
+    implementation Libs.AndroidX.Compose.runtime
+    implementation Libs.AndroidX.Compose.livedata
+
+    //compose-navigation
+    implementation Libs.AndroidX.Navigation.compose
+
+    //lifecycle
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-rc01'
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.0-rc01"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+
+
+    //fragivity
     implementation 'com.github.fragivity:core:0.1.6'
+
+    //retro
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    //ut
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    implementation Libs.Accompanist.coil
+
 }
 
 configurations.all {
-    resolutionStrategy.force  "androidx.fragment:fragment:1.2.5"
+    resolutionStrategy {
+        force  "androidx.fragment:fragment:1.2.5"
+    }
+
 }
 
