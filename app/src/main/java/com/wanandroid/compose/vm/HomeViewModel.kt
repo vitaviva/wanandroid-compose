@@ -8,6 +8,7 @@ import com.wanandroid.compose.data.repository.DataRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
+@Deprecated("")
 class HomeViewModel : ViewModel() {
 
     internal var curPage: Int = 0
