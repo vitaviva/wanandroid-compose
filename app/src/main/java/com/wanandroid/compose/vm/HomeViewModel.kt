@@ -1,64 +1,56 @@
 package com.wanandroid.compose.vm
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.wanandroid.compose.data.repository.DataRepository
+import com.wanandroid.compose.vm.mvi_base.*
 import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-
-@Deprecated("")
-class HomeViewModel : ViewModel() {
-
-    internal var curPage: Int = 0
-//    var list: LiveData<List<ArticleBean>> = liveData {
-//        val list = DataRepository.getArticlesList(0).data!!.datas
-//        emit(list)
-//    }
+import java.lang.Exception
 
 
-    private var _refreshing = MutableLiveData(RequestStatus.SUCCESS)
+//data class HomeViewState(val list: List<Any>) : ViewState
 
-    private val _articleList: MutableLiveData<List<Any>> = MutableLiveData()
-    val articleList: LiveData<List<Any>>
-        get() = _articleList
+sealed class HomeAction : Action {
+    object Refresh : HomeAction()
+    object LoadMore : HomeAction()
+}
 
-    fun refresh(cb: suspend () -> Unit) {
+class HomeViewModel : BaseViewModel<ListingViewState<Any>, Action>(ListingViewState()) {
 
-        viewModelScope.launch {
-            _refreshing.postValue(RequestStatus.REFRESHING)
-            val banner = async { loadBanner() }
-            val article = async {
-                curPage = 0
-                loadCurPage()
+    override suspend fun LiveCoroutineScope<ListingViewState<Any>>.reduce(
+        currentViewState: ListingViewState<Any>,
+        action: Action
+    ) {
+        when (action) {
+            is HomeAction.Refresh -> {
+                emit(currentViewState.copy(loading = true))
+                try {
+                    val page = 0
+                    val banner = async { loadBanner() }
+                    val article = async { loadPage(page) }
+                    val list = listOfNotNull(banner.await()) + article.await()
+                    emit(ListingViewState(loading = false, page = page, data = list, exception = null))
+                } catch (e: Exception) {
+                    emit(ListingViewState(exception = e))
+                }
             }
-            val list = listOf<Any>(banner.await()) + article.await()
-            _articleList.postValue(list)
-            cb.invoke()
-            _refreshing.postValue(RequestStatus.SUCCESS)
-        }
+            is HomeAction.LoadMore -> {
 
+                try {
+                    val page = currentViewState.page + 1
+                    val data = currentViewState.data + loadPage(page)
+                    emit(currentViewState.copy(page = page, data = data))
+                } catch (e: Exception) {
+                    emit(ListingViewState(exception = e))
+                }
+
+            }
+            else -> error("")
+        }
     }
 
-    fun loadMore() {
-        viewModelScope.launch {
-            _articleList.postValue(
-                (_articleList.value ?: emptyList()) + loadCurPage()
-            )
-        }
-    }
 
-    private suspend fun loadCurPage() = DataRepository.getArticlesList(curPage++).data!!.datas
-
-    val isRefreshing: LiveData<RequestStatus>
-        get() = _refreshing
-
+    private suspend fun loadPage(page: Int) = DataRepository.getArticlesList(page).data!!.datas
 
     private suspend fun loadBanner() = DataRepository.getBanner().data!!
 
-}
 
-enum class RequestStatus {
-    REFRESHING, SUCCESS, ERROR
 }

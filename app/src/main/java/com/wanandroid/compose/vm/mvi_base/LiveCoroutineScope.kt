@@ -1,4 +1,4 @@
-package com.wanandroid.compose.mvi.base
+package com.wanandroid.compose.vm.mvi_base
 
 import androidx.lifecycle.LiveDataScope
 import kotlinx.coroutines.CoroutineScope
