@@ -1,11 +1,11 @@
 package com.wanandroid.compose.data.api
 
-import com.wanandroid.compose.data.bean.ApiResponse
-import com.wanandroid.compose.data.bean.ArticleBean
-import com.wanandroid.compose.data.bean.BannerBean
-import com.wanandroid.compose.data.bean.Page
+import com.wanandroid.compose.data.bean.*
 import retrofit2.http.GET
 import retrofit2.http.Path
+import com.wanandroid.compose.data.bean.ArticleBean
+import retrofit2.http.Query
+
 
 interface ApiService {
 
@@ -15,13 +15,25 @@ interface ApiService {
      * @return
      */
     @GET("article/list/{curPage}/json")
-    suspend fun getArticlesList(@Path("curPage") curPage: Int): ApiResponse<Page<List<ArticleBean>>>
+    suspend fun getArticlesList(
+        @Path("curPage") curPage: Int,
+        @Query("cid") id: Int? = null
+    ): ApiResponse<Page<List<ArticleBean>>>
 
     /**
-     * 首页Banner
-     * @return
-     */
+    * 首页Banner
+    * @ return
+    */
     @GET("banner/json")
     suspend fun getBanner(): ApiResponse<List<BannerBean>>
+
+
+    /**
+     * 知识体系
+     * @return
+     */
+    @GET("tree/json")
+    suspend fun getSystem(): ApiResponse<List<TreeBean>>
+
 
 }

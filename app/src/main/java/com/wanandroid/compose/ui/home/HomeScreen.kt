@@ -12,10 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.AmbientContext
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -26,28 +25,29 @@ import com.wanandroid.compose.components.Pager
 import com.wanandroid.compose.components.PagerState
 import com.wanandroid.compose.data.bean.ArticleBean
 import com.wanandroid.compose.data.bean.BannerBean
-import com.wanandroid.compose.vm.mvi_base.ListingViewState
-import com.wanandroid.compose.vm.HomeAction
-import com.wanandroid.compose.vm.HomeViewModel
+import com.wanandroid.compose.ui.article_list.ArticleItem
 import com.wanandroid.compose.utils.Fab
 import com.wanandroid.compose.utils.PagedList
+import com.wanandroid.compose.vm.HomeListViewModel
+import com.wanandroid.compose.vm.mvi_base.PagedListingAction
+import com.wanandroid.compose.vm.mvi_base.PagedListingViewState
 import dev.chrisbanes.accompanist.coil.CoilImage
 
 @Composable
-fun Fragment.Home(
+fun Fragment.HomeScreen(
     modifier: Modifier = Modifier,
     navBackStackEntry: NavBackStackEntry,
     navHostController: NavHostController
 ) {
 
-    val vm: HomeViewModel by remember { viewModels() }
-    val viewState by vm.viewState.observeAsState(ListingViewState())
+    val vm: HomeListViewModel by remember { viewModels() }
+    val viewState by vm.viewState.observeAsState(PagedListingViewState())
     val listState = rememberLazyListState()
     val pagerState = remember { PagerState() }
 
     val onRefresh = remember {
         {
-            vm.dispatch(HomeAction.Refresh) {
+            vm.dispatch(PagedListingAction.Refresh) {
                 listState.snapToItemIndex(0)
                 pagerState.currentPage = 0
             }
@@ -90,13 +90,13 @@ fun Fragment.Home(
 @Composable
 private fun HomeList(
     modifier: Modifier = Modifier,
-    vm: HomeViewModel,
+    vm: HomeListViewModel,
     pagerState: PagerState = remember { PagerState() },
     listState: LazyListState = rememberLazyListState()
 ) {
 
-    val viewState by vm.viewState.observeAsState(ListingViewState())
-    val context = AmbientContext.current
+    val viewState by vm.viewState.observeAsState(PagedListingViewState())
+    val context = LocalContext.current
 
     PagedList(
         modifier = modifier,
@@ -104,7 +104,7 @@ private fun HomeList(
         listState = listState,
         onLoadMore = remember(viewState.page) {
             {
-                vm.dispatch(HomeAction.LoadMore)
+                vm.dispatch(PagedListingAction.LoadMore)
                 Toast.makeText(
                     context,
                     "loadMore: ${viewState.page}",
@@ -127,16 +127,6 @@ private fun HomeList(
     }
 
 }
-
-
-@Composable
-private fun ArticleItem(article: ArticleBean) {
-    Text(
-        modifier = Modifier.height(Dp(100f)),
-        text = "${article.title}"
-    )
-}
-
 
 @Composable
 private fun BannerItem(pagerState: PagerState, list: List<BannerBean>) {

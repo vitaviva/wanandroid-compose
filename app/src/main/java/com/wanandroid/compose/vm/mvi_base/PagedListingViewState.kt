@@ -1,6 +1,6 @@
 package com.wanandroid.compose.vm.mvi_base
 
-data class ListingViewState<T>(
+data class PagedListingViewState<T>(
     val loading: Boolean = false,
     val page: Int = 0,
     val data: List<T> = emptyList(),
@@ -18,3 +18,5 @@ data class ListingViewState<T>(
     val initialLoad: Boolean
         get() = data.isEmpty() && loading && !hasError
 }
+
+

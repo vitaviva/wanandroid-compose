@@ -29,20 +29,20 @@ object Libs {
     const val material = "com.google.android.material:material:1.1.0"
 
     object Accompanist {
-        private const val version = "0.5.0"
+        private const val version = "0.5.1"
         const val coil = "dev.chrisbanes.accompanist:accompanist-coil:$version"
         const val insets = "dev.chrisbanes.accompanist:accompanist-insets:$version"
     }
 
     object Kotlin {
-        const val version = "1.4.21-2"
+        const val version = "1.4.30"
         const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version"
         const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
         const val extensions = "org.jetbrains.kotlin:kotlin-android-extensions:$version"
     }
 
     object Coroutines {
-        private const val version = "1.4.2"
+        private const val version = "1.4.30"
         const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
         const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
         const val test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$version"
@@ -60,9 +60,17 @@ object Libs {
 
         const val coreKtx = "androidx.core:core-ktx:1.5.0-beta01"
 
+        object Activity {
+            const val activityCompose = "androidx.activity:activity-compose:1.3.0-alpha02"
+        }
+
+        object Constraint {
+            const val constraintLayoutCompose = "androidx.constraintlayout:constraintlayout-compose:1.0.0-alpha01"
+        }
+
         object Compose {
             private const val snapshot = ""
-            const val version = "1.0.0-alpha11"
+            const val version = "1.0.0-alpha12"
 
             @get:JvmStatic
             val snapshotUrl: String
@@ -78,6 +86,12 @@ object Libs {
             const val materialIconsExtended = "androidx.compose.material:material-icons-extended:${version}"
 
             const val tooling = "androidx.compose.ui:ui-tooling:${version}"
+        }
+
+        object Lifecycle {
+            private const val version = "2.3.0-beta01"
+            const val viewModelCompose = "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha01"
+            const val viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
         }
 
         object Test {
@@ -100,15 +114,9 @@ object Libs {
             const val compiler = "androidx.room:room-compiler:${version}"
         }
 
-        object Lifecycle {
-            private const val version = "2.2.0"
-            const val extensions = "androidx.lifecycle:lifecycle-extensions:$version"
-            const val livedata = "androidx.lifecycle:lifecycle-livedata-ktx:$version"
-            const val viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
-        }
 
         object Navigation {
-            private const val version = "1.0.0-alpha06"
+            private const val version = "1.0.0-alpha07"
             const val compose = "androidx.navigation:navigation-compose:$version"
         }
     }

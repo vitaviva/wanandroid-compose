@@ -1,7 +1,5 @@
 package com.wanandroid.compose.ui.main
 
-import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,15 +11,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
 import com.wanandroid.compose.ComposeFragment
 import com.wanandroid.compose.ui.Screen
 import com.wanandroid.compose.ui.favorite.Favorite
-import com.wanandroid.compose.ui.home.Home
-import com.wanandroid.compose.ui.knowledge.Knowledge
+import com.wanandroid.compose.ui.home.HomeScreen
+import com.wanandroid.compose.ui.channel.ChannelScreen
 import com.wanandroid.compose.ui.theme.WanandroidcomposeTheme
 
 
@@ -71,8 +68,12 @@ fun ComposeFragment.AppContent() {
 
                     val modifier = remember { Modifier.padding(it) }
                     NavHost(navController, startDestination = Screen.Home.route) {
-                        composable(Screen.Home.route) { Home(modifier, it, navController) }
-                        composable(Screen.Knowledge.route) { Knowledge(modifier,it, navController) }
+                        composable(Screen.Home.route) {
+                            HomeScreen(modifier, it, navController)
+                        }
+                        composable(Screen.Channel.route) {
+                            ChannelScreen(modifier, it, navController)
+                        }
                     }
 
                 }
@@ -125,13 +126,10 @@ fun ComposeFragment.AppContent() {
 
 @Composable
 fun BottomNavigation(currentRoute: String, navController: NavController) {
-    val items = remember { listOf(Screen.Home, Screen.Knowledge) }
+    val items = remember { listOf(Screen.Home, Screen.Channel) }
 
     BottomNavigation(
-        modifier = Modifier
-//            .padding(16.dp)
-            .fillMaxWidth(),
-//        backgroundColor = Color.Black,
+        modifier = Modifier.fillMaxWidth(),
         contentColor = Color.White,
     ) {
         items.forEach { screen ->

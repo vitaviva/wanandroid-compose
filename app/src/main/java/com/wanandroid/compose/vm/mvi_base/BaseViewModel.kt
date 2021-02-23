@@ -8,7 +8,7 @@ abstract class BaseViewModel<S : ViewState, A : Action>(initialState: S) : ViewM
 
     init {
         viewState = Transformations.switchMap(nextAction) {
-            liveData {
+            liveData(viewModelScope.coroutineContext) {
                 LiveCoroutineScopeImpl(this, viewModelScope)
                     .reduce(viewState.value ?: initialState, it.first)
                 it.second.invoke()

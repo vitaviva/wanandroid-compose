@@ -6,9 +6,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.wanandroid.compose.data.bean.ArticleBean
 
-
 @Composable
-fun <T>PagedList(
+fun <T> PagedList(
     modifier: Modifier = Modifier,
     datas: List<T>,
     listState: LazyListState = rememberLazyListState(),
@@ -24,7 +23,7 @@ fun <T>PagedList(
             itemContent(index, item)
 
             DisposableEffect(datas.size) {
-                if (datas.size - index < 2) {
+                if (datas.size > CNT_PER_PAGE && datas.size - index < 2) {
                     onLoadMore()
                 }
                 onDispose { }
@@ -33,3 +32,5 @@ fun <T>PagedList(
         }
     }
 }
+
+private const val CNT_PER_PAGE = 8
