@@ -66,7 +66,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0'
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0"
-
+    implementation Libs.AndroidX.Lifecycle.viewModelCompose
 
     //fragivity
     implementation 'com.github.fragivity:core:0.1.6'

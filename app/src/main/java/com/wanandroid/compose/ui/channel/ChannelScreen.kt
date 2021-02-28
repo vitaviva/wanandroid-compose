@@ -1,7 +1,8 @@
+
+
 package com.wanandroid.compose.ui.channel
 
 import ContentLoadingLayout
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -83,10 +84,10 @@ fun Fragment.ChannelScreen(
 
 @Composable
 private fun ChannelTabs(
+    modifier: Modifier = Modifier,
     categories: List<ChildrenBean> = emptyList(),
     selectedCategory: ChildrenBean?,
     onCategorySelected: (ChildrenBean) -> Unit,
-    modifier: Modifier = Modifier
 ) {
     val selectedIndex = categories.indexOfFirst { it == selectedCategory }
     ScrollableTabRow(
@@ -111,13 +112,14 @@ private fun ChannelTabs(
 
 
 @Composable
-fun Fragment.ChannelList(
+fun ChannelList(
     modifier: Modifier = Modifier,
     cid: Int
 ) {
     val vm: ChannelListViewModel = viewModel(cid.toString(), remember {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
                 return ChannelListViewModel(cid) as T
             }
         }
@@ -129,7 +131,7 @@ fun Fragment.ChannelList(
     val onRefresh = remember {
         {
             vm.dispatch(PagedListingAction.Refresh) {
-                listState.snapToItemIndex(0)
+                listState.scrollToItem(0)
             }
         }
     }

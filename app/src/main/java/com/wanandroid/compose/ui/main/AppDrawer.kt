@@ -51,7 +51,7 @@ private fun Avatar() {
     ) {
         val modifier = Modifier.fillMaxWidth()
         Image(
-            imageVector = vectorResource(R.drawable.ic_launcher_background),
+            imageVector = ImageVector.vectorResource(R.drawable.ic_launcher_background),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.FillBounds
@@ -63,11 +63,11 @@ private fun Avatar() {
         ) {
             Image(
                 modifier = modifier,
-                imageVector = vectorResource(R.drawable.ic_launcher_foreground),
+                imageVector = ImageVector.vectorResource(R.drawable.ic_launcher_foreground),
                 contentDescription = null, // decorative
                 colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
             )
-            Spacer(Modifier.preferredWidth(8.dp))
+            Spacer(Modifier.width(8.dp))
             Text(text = "请登录",
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center)
@@ -111,7 +111,7 @@ private fun DrawerButton(
                     colorFilter = ColorFilter.tint(textIconColor),
                     alpha = imageAlpha
                 )
-                Spacer(Modifier.preferredWidth(16.dp))
+                Spacer(Modifier.width(16.dp))
                 Text(
                     text = label,
                     style = MaterialTheme.typography.body2,

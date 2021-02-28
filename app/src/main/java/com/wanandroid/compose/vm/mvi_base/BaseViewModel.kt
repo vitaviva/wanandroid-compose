@@ -4,7 +4,7 @@ import androidx.lifecycle.*
 
 abstract class BaseViewModel<S : ViewState, A : Action>(initialState: S) : ViewModel() {
     private val nextAction = MutableLiveData<Pair<A, PostAction>>()
-    var viewState: LiveData<S> = MutableLiveData(initialState)
+    lateinit var viewState: LiveData<S>
 
     init {
         viewState = Transformations.switchMap(nextAction) {

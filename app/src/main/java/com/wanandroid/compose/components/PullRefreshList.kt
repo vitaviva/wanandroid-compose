@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
@@ -21,12 +21,12 @@ inline fun <T> PullRefreshList(
     loadMoreOffset: Int = 2,
     crossinline itemContent: @Composable LazyItemScope.(index: Int, item: T) -> Unit
 ) {
-    val context = AmbientContext.current
+    val context = LocalContext.current
     val refreshLayout = remember { SwipeRefreshLayout(context) }
 
     AndroidView(
         modifier = modifier.fillMaxSize(), // Occupy the max size in the Compose UI tree
-        viewBlock = { context ->
+        factory = { context ->
             // Creates custom view
             refreshLayout.apply {
 
@@ -92,7 +92,7 @@ inline fun <T> PullRefreshList(
 
     AndroidView(
         modifier = Modifier.fillMaxSize(), // Occupy the max size in the Compose UI tree
-        viewBlock = { context ->
+        factory = { context ->
             // Creates custom view
             refreshLayout.apply {
 

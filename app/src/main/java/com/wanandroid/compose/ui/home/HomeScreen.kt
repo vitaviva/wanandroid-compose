@@ -32,6 +32,7 @@ import com.wanandroid.compose.vm.HomeListViewModel
 import com.wanandroid.compose.vm.mvi_base.PagedListingAction
 import com.wanandroid.compose.vm.mvi_base.PagedListingViewState
 import dev.chrisbanes.accompanist.coil.CoilImage
+import java.time.OffsetDateTime
 
 @Composable
 fun Fragment.HomeScreen(
@@ -48,7 +49,7 @@ fun Fragment.HomeScreen(
     val onRefresh = remember {
         {
             vm.dispatch(PagedListingAction.Refresh) {
-                listState.snapToItemIndex(0)
+                listState.scrollToItem(0)
                 pagerState.currentPage = 0
             }
         }
@@ -144,7 +145,7 @@ private fun BannerItem(pagerState: PagerState, list: List<BannerBean>) {
             modifier = Modifier
                 .padding(start = 10.dp, top = 16.dp, end = 10.dp)
                 .fillMaxWidth()
-                .preferredHeight(200.dp)
+                .height(200.dp)
         ) {
             val banner = list[page]
 
@@ -161,6 +162,8 @@ private fun BannerItem(pagerState: PagerState, list: List<BannerBean>) {
         Spacer(Modifier.height(16.dp))
     }
 }
+
+
 
 @Composable
 private fun FollowedPodcastCarouselItem(
@@ -193,7 +196,7 @@ private fun FollowedPodcastCarouselItem(
         }
 
         if (title != null) {
-            Providers(AmbientContentAlpha provides ContentAlpha.medium) {
+            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                 Text(
                     text = title,
                     style = MaterialTheme.typography.caption,
@@ -207,4 +210,3 @@ private fun FollowedPodcastCarouselItem(
         }
     }
 }
-

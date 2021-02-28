@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -20,6 +21,7 @@ import com.wanandroid.compose.ui.favorite.Favorite
 import com.wanandroid.compose.ui.home.HomeScreen
 import com.wanandroid.compose.ui.channel.ChannelScreen
 import com.wanandroid.compose.ui.theme.WanandroidcomposeTheme
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -28,6 +30,7 @@ fun ComposeFragment.AppContent() {
         // A surface container using the 'background' color from the theme
         Surface(color = MaterialTheme.colors.background) {
 
+            val coroutineScope = rememberCoroutineScope()
             Box {
 
                 val scaffoldState = rememberScaffoldState()
@@ -43,7 +46,7 @@ fun ComposeFragment.AppContent() {
                             title = { Text(stringResource(id = Screen.of(currentRoute).resourceId)) },
                             navigationIcon = {
                                 IconButton(
-                                    onClick = { scaffoldState.drawerState.open() }
+                                    onClick = { coroutineScope.launch { scaffoldState.drawerState.open() } }
                                 ) {
                                     Icon(Icons.Filled.Menu, "")
                                 }
@@ -59,7 +62,7 @@ fun ComposeFragment.AppContent() {
                                     else -> error("")
                                 }
                             },
-                            closeDrawer = { scaffoldState.drawerState.close() })
+                            closeDrawer = { coroutineScope.launch { scaffoldState.drawerState.close() } })
                     },
                     bottomBar = {
                         BottomNavigation(currentRoute, navController)
@@ -150,7 +153,7 @@ fun BottomNavigation(currentRoute: String, navController: NavController) {
                 },
                 // alwaysShowLabels is used to set if you want to show the labels always or
                 // just for the current item.
-                alwaysShowLabels = true
+                alwaysShowLabel = true
             )
         }
     }

@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
+
+//copy from JetNews
 package com.wanandroid.compose.components
 
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.material.ExperimentalMaterialApi
@@ -24,15 +27,14 @@ import androidx.compose.material.SwipeableState
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material.swipeable
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.gesture.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.gesture.nestedscroll.NestedScrollSource
-import androidx.compose.ui.gesture.nestedscroll.nestedScroll
-import androidx.compose.ui.gesture.scrollorientationlocking.Orientation
-import androidx.compose.ui.platform.AmbientDensity
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
@@ -40,9 +42,6 @@ import kotlin.math.roundToInt
 
 private val RefreshDistance = 80.dp
 
-/**
- * copy from jetnews
- */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SwipeToRefreshLayout(
@@ -51,7 +50,7 @@ fun SwipeToRefreshLayout(
     refreshIndicator: @Composable () -> Unit,
     content: @Composable () -> Unit
 ) {
-    val refreshDistance = with(AmbientDensity.current) { RefreshDistance.toPx() }
+    val refreshDistance = with(LocalDensity.current) { RefreshDistance.toPx() }
     val state = rememberSwipeableState(refreshingState) { newValue ->
         // compare both copies of the swipe state before calling onRefresh(). This is a workaround.
         if (newValue && !refreshingState) onRefresh()
@@ -85,10 +84,7 @@ fun SwipeToRefreshLayout(
         // TODO (https://issuetracker.google.com/issues/164113834): This state->event trampoline is a
         //  workaround for a bug in the SwipableState API. Currently, state.value is a duplicated
         //  source of truth of refreshingState.
-        DisposableEffect(refreshingState) {
-            state.animateTo(refreshingState)
-            onDispose {}
-        }
+        LaunchedEffect(refreshingState) { state.animateTo(refreshingState) }
     }
 }
 
@@ -120,10 +116,10 @@ private val <T> SwipeableState<T>.PreUpPostDownNestedScrollConnection: NestedScr
             }
         }
 
-        override fun onPreFling(available: Velocity): Velocity {
+        override suspend fun onPreFling(available: Velocity): Velocity {
             val toFling = Offset(available.x, available.y).toFloat()
             return if (toFling < 0) {
-                performFling(velocity = toFling) {}
+                performFling(velocity = toFling)
                 // since we go to the anchor with tween settling, consume all for the best UX
                 available
             } else {
@@ -131,15 +127,12 @@ private val <T> SwipeableState<T>.PreUpPostDownNestedScrollConnection: NestedScr
             }
         }
 
-        override fun onPostFling(
+        override suspend fun onPostFling(
             consumed: Velocity,
-            available: Velocity,
-            onFinished: (Velocity) -> Unit
-        ) {
-            performFling(velocity = Offset(available.x, available.y).toFloat()) {
-                // since we go to the anchor with tween settling, consume all for the best UX
-                onFinished.invoke(available)
-            }
+            available: Velocity
+        ): Velocity {
+            performFling(velocity = Offset(available.x, available.y).toFloat())
+            return Velocity.Zero
         }
 
         private fun Float.toOffset(): Offset = Offset(0f, this)
