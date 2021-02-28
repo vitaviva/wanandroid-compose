@@ -1,11 +1,12 @@
-
-
 package com.wanandroid.compose.ui.channel
 
 import ContentLoadingLayout
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -33,6 +34,7 @@ import com.wanandroid.compose.vm.ChannelTabViewModel
 import com.wanandroid.compose.vm.ChannelViewState
 import com.wanandroid.compose.vm.mvi_base.PagedListingAction
 import com.wanandroid.compose.vm.mvi_base.PagedListingViewState
+import kotlinx.coroutines.launch
 
 @Composable
 fun Fragment.ChannelScreen(
@@ -40,8 +42,6 @@ fun Fragment.ChannelScreen(
     navBackStackEntry: NavBackStackEntry,
     navHostController: NavHostController
 ) {
-
-
     val vm: ChannelTabViewModel by remember { viewModels() }
     val viewState by vm.viewState.observeAsState(ChannelViewState())
 
@@ -52,31 +52,39 @@ fun Fragment.ChannelScreen(
 
     if (viewState.curChannel == null) return
 
-    Column {
-        Row {
-            ChannelTabs(
-                categories = viewState.allChannels,
-                selectedCategory = viewState.curChannel,
-                onCategorySelected = { vm.dispatch(ChannelAction.SwitchChannel(it)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            )
+    val bottomSheetVisible = mutableStateOf(false)
+    BottomSheetLayouts(
+        bottomSheetState = bottomSheetVisible,
+        drawerContent = { ChannelChooser() },
+    ) {
 
-            Icon(
-                modifier = Modifier
-                    .padding(start = 10.dp, end = 10.dp)
-                    .align(Alignment.CenterVertically),
-                imageVector = Icons.Default.Menu,
-                contentDescription = ""
-            )
+        Column {
+            Row {
+                ChannelTabs(
+                    categories = viewState.allChannels,
+                    selectedCategory = viewState.curChannel,
+                    onCategorySelected = { vm.dispatch(ChannelAction.SwitchChannel(it)) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                )
+
+                Icon(
+                    modifier = Modifier
+                        .clickable { bottomSheetVisible.value = true }
+                        .padding(start = 10.dp, end = 10.dp)
+                        .align(Alignment.CenterVertically),
+                    imageVector = Icons.Default.Menu,
+                    contentDescription = ""
+                )
+
+            }
+
+            key(viewState.curChannel!!.id) {
+                ChannelList(cid = viewState.curChannel!!.id)
+            }
 
         }
-
-        key(viewState.curChannel!!.id) {
-            ChannelList(cid = viewState.curChannel!!.id)
-        }
-
     }
 
 }
@@ -175,4 +183,59 @@ fun ChannelList(
             }
         }
     )
+}
+
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun Fragment.BottomSheetLayouts(
+    bottomSheetState: MutableState<Boolean>,
+    drawerContent: @Composable () -> Unit,
+    bodyContent: @Composable () -> Unit
+) {
+    Box {
+
+        bodyContent()
+
+        if (bottomSheetState.value) {
+
+            val coroutineScope = rememberCoroutineScope()
+            val drawerState = remember(bottomSheetState.value) {
+                BottomDrawerState(BottomDrawerValue.Open)
+            }
+
+            if (drawerState.isClosed) {
+                bottomSheetState.value = false
+            } else {
+                DisposableEffect(drawerState) {
+                    val onBackPressedCallback = object : OnBackPressedCallback(true) {
+                        override fun handleOnBackPressed() {
+                            coroutineScope.launch { drawerState.close() }
+                        }
+                    }
+                    requireActivity().onBackPressedDispatcher.addCallback(onBackPressedCallback)
+                    onDispose {
+                        onBackPressedCallback.remove()
+                    }
+                }
+
+
+                BottomDrawer(
+                    drawerState = drawerState,
+                    drawerShape = RoundedCornerShape(16.dp),
+                    drawerContent = { drawerContent() },
+                    content = { }
+                )
+            }
+
+        }
+
+    }
+
+}
+
+
+@Composable
+fun ChannelChooser() {
+    Text("hahaha")
 }
