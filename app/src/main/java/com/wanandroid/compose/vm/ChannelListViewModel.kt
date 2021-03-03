@@ -9,7 +9,7 @@ class ChannelListViewModel(private val cid: Int) : PagedListViewModel<ArticleBea
 
     override suspend fun CoroutineScope.refresh(): List<ArticleBean> = loadPage(0)
 
-    override suspend fun CoroutineScope.loadMore(page: Int): List<ArticleBean> =  loadPage(page)
+    override suspend fun CoroutineScope.loadMore(page: Int): List<ArticleBean> = loadPage(page)
 
     private suspend fun loadPage(page: Int) = DataRepository.getArticlesList(page, cid).data!!.datas
 

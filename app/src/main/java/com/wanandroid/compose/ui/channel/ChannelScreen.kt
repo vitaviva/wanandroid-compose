@@ -52,18 +52,20 @@ fun Fragment.ChannelScreen(
 
     if (viewState.curChannel == null) return
 
-    val bottomSheetVisible = mutableStateOf(false)
+    val bottomSheetVisible = remember { mutableStateOf(false) }
+
     BottomSheetLayouts(
+        modifier = modifier,
         bottomSheetState = bottomSheetVisible,
-        drawerContent = { ChannelChooser() },
+        drawerContent = { ChannelChooser(vm) },
     ) {
 
         Column {
             Row {
                 ChannelTabs(
-                    categories = viewState.allChannels,
-                    selectedCategory = viewState.curChannel,
-                    onCategorySelected = { vm.dispatch(ChannelAction.SwitchChannel(it)) },
+                    channels = viewState.myChannels ?: emptyList(),
+                    selectedChannel = viewState.curChannel,
+                    onChannelSelected = { vm.dispatch(ChannelAction.SwitchChannel(it)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
@@ -93,21 +95,21 @@ fun Fragment.ChannelScreen(
 @Composable
 private fun ChannelTabs(
     modifier: Modifier = Modifier,
-    categories: List<ChildrenBean> = emptyList(),
-    selectedCategory: ChildrenBean?,
-    onCategorySelected: (ChildrenBean) -> Unit,
+    channels: List<ChildrenBean> = emptyList(),
+    selectedChannel: ChildrenBean?,
+    onChannelSelected: (ChildrenBean) -> Unit,
 ) {
-    val selectedIndex = categories.indexOfFirst { it == selectedCategory }
+    val selectedIndex = channels.indexOfFirst { it == selectedChannel }.coerceAtLeast(0)
     ScrollableTabRow(
         selectedTabIndex = selectedIndex,
         divider = {}, /* Disable the built-in divider */
         edgePadding = 24.dp,
         modifier = modifier
     ) {
-        categories.forEachIndexed { index, category ->
+        channels.forEachIndexed { index, category ->
             Tab(
                 selected = index == selectedIndex,
-                onClick = { onCategorySelected(category) }
+                onClick = { onChannelSelected(category) }
             ) {
                 Text(
                     text = category.name,
@@ -189,6 +191,7 @@ fun ChannelList(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Fragment.BottomSheetLayouts(
+    modifier: Modifier,
     bottomSheetState: MutableState<Boolean>,
     drawerContent: @Composable () -> Unit,
     bodyContent: @Composable () -> Unit
@@ -221,6 +224,7 @@ fun Fragment.BottomSheetLayouts(
 
 
                 BottomDrawer(
+                    modifier = modifier,
                     drawerState = drawerState,
                     drawerShape = RoundedCornerShape(16.dp),
                     drawerContent = { drawerContent() },
@@ -235,7 +239,3 @@ fun Fragment.BottomSheetLayouts(
 }
 
 
-@Composable
-fun ChannelChooser() {
-    Text("hahaha")
-}
