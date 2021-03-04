@@ -1,18 +1,26 @@
 package com.wanandroid.compose.data.repository
 
+import com.wanandroid.compose.Graph
 import com.wanandroid.compose.data.api.ApiService
-import okhttp3.OkHttpClient
-import retrofit2.converter.gson.GsonConverterFactory
-
+import com.wanandroid.compose.data.bean.ApiResponse
+import com.wanandroid.compose.data.bean.ChildrenBean
+import com.wanandroid.compose.data.bean.TreeBean
+import kotlinx.coroutines.CoroutineScope
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 object DataRepository {
 
+    private val scope = CoroutineScope(Graph.mainDispatcher)
+
+    private val channelDao
+        get() = Graph.database.channelDao()
+
     private val apiService by lazy {
         Retrofit.Builder()
             .baseUrl("https://www.wanandroid.com/")
-            .client(OkHttpClient())
+            .client(Graph.okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build().create(ApiService::class.java)
     }
@@ -23,5 +31,25 @@ object DataRepository {
 
     suspend fun getBanner() = apiService.getBanner()
 
-    suspend fun getSystem() = apiService.getSystem()
+    suspend fun getSystem(): ApiResponse<List<TreeBean>> {
+        var selectedChannel = channelDao.getChannels()
+        return apiService.getSystem().also {
+            if (selectedChannel.isNullOrEmpty()) {
+                // add default when there is no selected
+                it.data?.first()?.children?.let {
+                    channelDao.insertAll(it)
+                    selectedChannel = it
+                }
+            }
+            //update local selected status
+            it.data?.flatMap { it.children }?.map {
+                it.apply { selected = selectedChannel.any { it2 -> it.id == it2.id } }
+            } ?: emptyList()
+        }
+    }
+
+    suspend fun addToMyChannel(childrenBean: ChildrenBean) = channelDao.insert(childrenBean)
+
+    suspend fun removeFromMyChannel(childrenBean: ChildrenBean) = channelDao.delete(childrenBean)
+
 }

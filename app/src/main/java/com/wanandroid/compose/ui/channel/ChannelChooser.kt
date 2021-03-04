@@ -19,8 +19,7 @@ import com.wanandroid.compose.data.bean.ChildrenBean
 import com.wanandroid.compose.vm.ChannelAction
 import com.wanandroid.compose.vm.ChannelTabViewModel
 import com.wanandroid.compose.vm.ChannelViewState
-import com.wanandroid.compose.vm.isSelected
-
+import com.wanandroid.compose.vm.myChannels
 
 @Composable
 fun ChannelChooser(vm: ChannelTabViewModel) {
@@ -31,7 +30,10 @@ fun ChannelChooser(vm: ChannelTabViewModel) {
 
     LazyColumn {
         item {
-            ChannelFlow("我的频道", viewState.myChannels ?: emptyList()) {
+            ChannelFlow(
+                "我的频道",
+                viewState.myChannels
+            ) {
                 vm.dispatch(ChannelAction.RemoveChannel(it))
             }
             Spacer(modifier = Modifier.height(20.dp))
@@ -39,7 +41,7 @@ fun ChannelChooser(vm: ChannelTabViewModel) {
         items(viewState.allChannels.size) {
             val tree = viewState.allChannels[it]
             ChannelFlow(tree.name ?: "", tree.children) { channel ->
-                if (channel.isSelected()) {
+                if (channel.selected) {
                     vm.dispatch(ChannelAction.RemoveChannel(channel))
                 } else {
                     vm.dispatch(ChannelAction.AddChannel(channel))
@@ -67,7 +69,7 @@ private fun ChannelFlow(
 
         FlowLayout {
             channels.forEach {
-                FlowItem(text = it.name, selected = it.isSelected()) { onItemClick(it) }
+                FlowItem(text = it.name, selected = it.selected) { onItemClick(it) }
                 Spacer(Modifier.size(5.dp))
             }
         }

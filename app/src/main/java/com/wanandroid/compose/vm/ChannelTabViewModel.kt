@@ -7,13 +7,14 @@ import com.wanandroid.compose.vm.mvi_base.Action
 import com.wanandroid.compose.vm.mvi_base.BaseViewModel
 import com.wanandroid.compose.vm.mvi_base.LiveCoroutineScope
 import com.wanandroid.compose.vm.mvi_base.ViewState
-import java.util.*
 
 data class ChannelViewState(
     val allChannels: List<TreeBean> = emptyList(),
-    val myChannels: List<ChildrenBean>? = null,
     val curChannel: ChildrenBean? = null,
 ) : ViewState
+
+val ChannelViewState.myChannels
+    get() = allChannels.flatMap { it.children }.filter { it.selected }
 
 
 sealed class ChannelAction : Action {
@@ -22,6 +23,7 @@ sealed class ChannelAction : Action {
     data class AddChannel(val channel: ChildrenBean) : Action
     data class RemoveChannel(val channel: ChildrenBean) : Action
 }
+
 
 class ChannelTabViewModel : BaseViewModel<ChannelViewState, Action>(ChannelViewState()) {
 
@@ -32,45 +34,53 @@ class ChannelTabViewModel : BaseViewModel<ChannelViewState, Action>(ChannelViewS
         when (action) {
             ChannelAction.LoadAllChannels -> {
                 val trees = requireNotNull(DataRepository.getSystem().data)
-                val myChannels = currentViewState.myChannels ?: trees.first().children
+                val myChannels = trees.flatMap { it.children }.filter { it.selected }
                 val curChannel = currentViewState.curChannel ?: myChannels.first()
 
                 emit(
                     currentViewState.copy(
                         allChannels = trees,
-                        myChannels = myChannels,
                         curChannel = curChannel
-                    ).also { it.updateToMap() }
+                    )
                 )
             }
             is ChannelAction.SwitchChannel -> {
                 emit(currentViewState.copy(curChannel = action.channel))
             }
             is ChannelAction.AddChannel -> {
-                emit(
-                    currentViewState.copy(
-                        myChannels = currentViewState.myChannels?.plus(action.channel)
-                    ).also { it.updateToMap() }
-                )
+                currentViewState.copy(
+                    allChannels = currentViewState.allChannels.setChannelSelected(
+                        action.channel, true
+                    )
+                ).also { DataRepository.addToMyChannel(action.channel) }
             }
             is ChannelAction.RemoveChannel -> {
                 emit(
                     currentViewState.copy(
-                        myChannels = currentViewState.myChannels?.minus(action.channel)
-                    ).also { it.updateToMap() }
+                        allChannels = currentViewState.allChannels.setChannelSelected(
+                            action.channel, false
+                        )
+                    ).also { DataRepository.removeFromMyChannel(action.channel) }
                 )
             }
         }
     }
 
-}
-
-
-private val _map = WeakHashMap<ChildrenBean, Boolean>()
-private fun ChannelViewState.updateToMap() {
-    _map.clear()
-    myChannels?.forEach {
-        _map[it] = true
+    private fun List<TreeBean>.setChannelSelected(
+        channel: ChildrenBean,
+        selected: Boolean
+    ): List<TreeBean> {
+        return map { parent ->
+            if (parent.id == channel.parentChapterId) {
+                parent.copy(children = parent.children.map {
+                    if (it.id == channel.id) {
+                        it.copy(selected = selected)
+                    } else {
+                        it
+                    }
+                })
+            } else parent
+        }
     }
+
 }
-fun ChildrenBean.isSelected() = run { this in _map }

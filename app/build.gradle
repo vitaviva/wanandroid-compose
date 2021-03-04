@@ -3,6 +3,7 @@ import com.wanandroid.compose.buildsrc.Libs
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -68,6 +69,11 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0"
     implementation Libs.AndroidX.Lifecycle.viewModelCompose
 
+    //room
+    implementation Libs.AndroidX.Room.runtime
+    implementation Libs.AndroidX.Room.ktx
+    kapt Libs.AndroidX.Room.compiler
+
     //fragivity
     implementation 'com.github.fragivity:core:0.1.6'
 
@@ -82,6 +88,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     implementation Libs.Accompanist.coil
+
+
 
 }
 

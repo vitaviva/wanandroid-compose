@@ -28,10 +28,7 @@ import com.wanandroid.compose.components.FullScreenLoading
 import com.wanandroid.compose.data.bean.ChildrenBean
 import com.wanandroid.compose.ui.article_list.ArticleItem
 import com.wanandroid.compose.utils.PagedList
-import com.wanandroid.compose.vm.ChannelAction
-import com.wanandroid.compose.vm.ChannelListViewModel
-import com.wanandroid.compose.vm.ChannelTabViewModel
-import com.wanandroid.compose.vm.ChannelViewState
+import com.wanandroid.compose.vm.*
 import com.wanandroid.compose.vm.mvi_base.PagedListingAction
 import com.wanandroid.compose.vm.mvi_base.PagedListingViewState
 import kotlinx.coroutines.launch
@@ -63,7 +60,7 @@ fun Fragment.ChannelScreen(
         Column {
             Row {
                 ChannelTabs(
-                    channels = viewState.myChannels ?: emptyList(),
+                    channels = viewState.myChannels,
                     selectedChannel = viewState.curChannel,
                     onChannelSelected = { vm.dispatch(ChannelAction.SwitchChannel(it)) },
                     modifier = Modifier
