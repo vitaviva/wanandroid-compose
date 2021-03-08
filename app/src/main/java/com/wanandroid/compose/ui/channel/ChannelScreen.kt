@@ -24,6 +24,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import com.wanandroid.compose.ComposeFragment
 import com.wanandroid.compose.components.FullScreenLoading
 import com.wanandroid.compose.data.bean.ChildrenBean
 import com.wanandroid.compose.ui.article_list.ArticleItem
@@ -34,7 +35,7 @@ import com.wanandroid.compose.vm.mvi_base.PagedListingViewState
 import kotlinx.coroutines.launch
 
 @Composable
-fun Fragment.ChannelScreen(
+fun ComposeFragment.ChannelScreen(
     modifier: Modifier = Modifier,
     navBackStackEntry: NavBackStackEntry,
     navHostController: NavHostController
@@ -119,7 +120,7 @@ private fun ChannelTabs(
 
 
 @Composable
-fun ChannelList(
+fun ComposeFragment.ChannelList(
     modifier: Modifier = Modifier,
     cid: Int
 ) {

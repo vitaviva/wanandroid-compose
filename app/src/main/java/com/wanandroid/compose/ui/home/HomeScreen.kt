@@ -2,6 +2,7 @@ package com.wanandroid.compose.ui.home
 
 import ContentLoadingLayout
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -16,26 +17,26 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import com.wanandroid.compose.ComposeFragment
 import com.wanandroid.compose.components.FullScreenLoading
 import com.wanandroid.compose.components.Pager
 import com.wanandroid.compose.components.PagerState
 import com.wanandroid.compose.data.bean.ArticleBean
 import com.wanandroid.compose.data.bean.BannerBean
 import com.wanandroid.compose.ui.article_list.ArticleItem
+import com.wanandroid.compose.ui.detail.DetailScreen
 import com.wanandroid.compose.utils.Fab
 import com.wanandroid.compose.utils.PagedList
 import com.wanandroid.compose.vm.HomeListViewModel
 import com.wanandroid.compose.vm.mvi_base.PagedListingAction
 import com.wanandroid.compose.vm.mvi_base.PagedListingViewState
 import dev.chrisbanes.accompanist.coil.CoilImage
-import java.time.OffsetDateTime
 
 @Composable
-fun Fragment.HomeScreen(
+fun ComposeFragment.HomeScreen(
     modifier: Modifier = Modifier,
     navBackStackEntry: NavBackStackEntry,
     navHostController: NavHostController
@@ -89,7 +90,7 @@ fun Fragment.HomeScreen(
 
 
 @Composable
-private fun HomeList(
+private fun ComposeFragment.HomeList(
     modifier: Modifier = Modifier,
     vm: HomeListViewModel,
     pagerState: PagerState = remember { PagerState() },
@@ -130,7 +131,7 @@ private fun HomeList(
 }
 
 @Composable
-private fun BannerItem(pagerState: PagerState, list: List<BannerBean>) {
+private fun ComposeFragment.BannerItem(pagerState: PagerState, list: List<BannerBean>) {
 
     pagerState.maxPage = (list.size - 1).coerceAtLeast(0)
 
@@ -149,13 +150,18 @@ private fun BannerItem(pagerState: PagerState, list: List<BannerBean>) {
         ) {
             val banner = list[page]
 
-            FollowedPodcastCarouselItem(
+            CarouselItem(
                 podcastImageUrl = banner.imagePath,
                 title = banner.title,
                 onUnfollowedClick = { /*onPodcastUnfollowed(podcast.uri)*/ },
                 modifier = Modifier
                     .padding(4.dp)
                     .fillMaxHeight()
+                    .clickable {
+                        openNewTab {
+                            DetailScreen(banner.url.orEmpty())
+                        }
+                    }
             )
         }
 
@@ -164,9 +170,8 @@ private fun BannerItem(pagerState: PagerState, list: List<BannerBean>) {
 }
 
 
-
 @Composable
-private fun FollowedPodcastCarouselItem(
+private fun CarouselItem(
     modifier: Modifier = Modifier,
     podcastImageUrl: String? = null,
     title: String? = null,

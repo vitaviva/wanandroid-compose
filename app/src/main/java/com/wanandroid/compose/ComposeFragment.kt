@@ -5,7 +5,7 @@ import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import com.github.fragivity.applyFadeInOut
+import com.github.fragivity.applySlideInOut
 import com.github.fragivity.navigator
 import com.github.fragivity.push
 import com.github.fragivity.swipeback.swipeBackLayout
@@ -26,7 +26,7 @@ class ComposeFragment(
 
     fun openNewTab(content: @Composable ComposeFragment.() -> Unit) {
         navigator.push(
-            optionsBuilder = { applyFadeInOut() },
+            optionsBuilder = { applySlideInOut() },
             block = { ComposeFragment(true, content) }
         )
     }
