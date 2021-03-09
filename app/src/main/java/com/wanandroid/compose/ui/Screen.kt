@@ -22,12 +22,18 @@ private const val SIS_SCREEN = "sis_screen"
 private const val SIS_ROUTE = "screen_name"
 
 
-sealed class Screen(val route: String, @StringRes val resourceId: Int, val icon: ImageVector) {
+sealed class Screen(
+    val route: String,
+    @StringRes val resourceId: Int,
+    val icon: ImageVector? = null
+) {
     object Main : Screen("wanandroid/main", -1, Icons.Default.Home)
     object Home : Screen("wanandroid/main/home", R.string.home, Icons.Default.Home)
     object Channel : Screen("wanandroid/main/channel", R.string.Channel, Icons.Default.Menu)
     object Settings : Screen("wanandroid/settings", R.string.Channel, Icons.Default.Settings)
     object Favorite : Screen("wanandroid/favorite", R.string.favorite, Icons.Default.Favorite)
+    object Login : Screen("wanandroid/login", R.string.login)
+
 
     init {
         _map[route] = this

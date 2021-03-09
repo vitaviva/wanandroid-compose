@@ -52,4 +52,7 @@ object DataRepository {
 
     suspend fun removeFromMyChannel(childrenBean: ChildrenBean) = channelDao.delete(childrenBean)
 
+    suspend fun login(name: String, pwd: String) = apiService.login(name, pwd)
+
+    suspend fun logout() = apiService.logout()
 }

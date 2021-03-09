@@ -20,6 +20,7 @@ import com.wanandroid.compose.ui.Screen
 import com.wanandroid.compose.ui.favorite.Favorite
 import com.wanandroid.compose.ui.home.HomeScreen
 import com.wanandroid.compose.ui.channel.ChannelScreen
+import com.wanandroid.compose.ui.login.LoginScreen
 import com.wanandroid.compose.ui.theme.WanandroidcomposeTheme
 import kotlinx.coroutines.launch
 
@@ -58,8 +59,8 @@ fun ComposeFragment.AppContent() {
                         AppDrawer(
                             navigateTo = {
                                 when (it) {
-                                    is Screen.Favorite -> openNewTab { Favorite() }
-                                    else -> error("")
+                                    Screen.Favorite -> openNewTab { Favorite() }
+                                    Screen.Login -> openNewTab { LoginScreen() }
                                 }
                             },
                             closeDrawer = { coroutineScope.launch { scaffoldState.drawerState.close() } })
@@ -138,7 +139,7 @@ fun BottomNavigation(currentRoute: String, navController: NavController) {
         items.forEach { screen ->
             BottomNavigationItem(
                 label = { Text(text = stringResource(id = screen.resourceId)) },
-                icon = { Icon(screen.icon, null) },
+                icon = { Icon(requireNotNull(screen.icon), null) },
                 selected = currentRoute == screen.route,
                 onClick = {
                     navController.navigate(screen.route) {

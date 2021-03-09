@@ -4,6 +4,7 @@ import com.wanandroid.compose.data.bean.*
 import retrofit2.http.GET
 import retrofit2.http.Path
 import com.wanandroid.compose.data.bean.ArticleBean
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 
@@ -21,9 +22,9 @@ interface ApiService {
     ): ApiResponse<Page<List<ArticleBean>>>
 
     /**
-    * 首页Banner
-    * @ return
-    */
+     * 首页Banner
+     * @ return
+     */
     @GET("banner/json")
     suspend fun getBanner(): ApiResponse<List<BannerBean>>
 
@@ -35,5 +36,21 @@ interface ApiService {
     @GET("tree/json")
     suspend fun getSystem(): ApiResponse<List<TreeBean>>
 
+
+    /**
+     * 登陆
+     */
+    @POST("user/login")
+    suspend fun login(
+        @Query("username") username: String,
+        @Query("password") password: String
+    ): ApiResponse<Login>
+
+
+    /**
+     * 登出
+     */
+    @GET("user/logout/json")
+    suspend fun logout(): ApiResponse<Any>
 
 }

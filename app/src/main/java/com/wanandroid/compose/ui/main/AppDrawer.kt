@@ -1,11 +1,15 @@
 package com.wanandroid.compose.ui.main
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,34 +22,41 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.wanandroid.compose.R
 import com.wanandroid.compose.ui.Screen
+import com.wanandroid.compose.vm.LoginViewModel
+import com.wanandroid.compose.vm.LoginViewState
 
 @Composable
-fun AppDrawer(
+fun Fragment.AppDrawer(
     navigateTo: (Screen) -> Unit,
     closeDrawer: () -> Unit
 ) {
+    val vm: LoginViewModel by remember { activityViewModels() }
+    val logInfo by vm.viewState.observeAsState(LoginViewState())
     Column(modifier = Modifier.fillMaxSize()) {
-//        Spacer(Modifier.preferredHeight(24.dp))
-        Avatar()
-        Divider(color = MaterialTheme.colors.onSurface.copy(alpha = .2f))
-        DrawerButton(
-            icon = Icons.Filled.Home,
-            label = stringResource(Screen.Favorite.resourceId),
-            action = {
-                navigateTo(Screen.Favorite)
-                closeDrawer()
-            }
-        )
-
+        Avatar(Modifier.clickable {
+            navigateTo(Screen.Login)
+        }, logInfo.loginInfo?.nickname)
     }
+    Divider(color = MaterialTheme.colors.onSurface.copy(alpha = .2f))
+    DrawerButton(
+        icon = Icons.Filled.Home,
+        label = stringResource(Screen.Favorite.resourceId),
+        action = {
+            navigateTo(Screen.Favorite)
+            closeDrawer()
+        }
+    )
+
 }
 
 @Composable
-private fun Avatar() {
+private fun Avatar(modifier: Modifier = Modifier, name: String? = null) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .height(Dp(200f))
             .fillMaxWidth()
     ) {
@@ -68,9 +79,11 @@ private fun Avatar() {
                 colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
             )
             Spacer(Modifier.width(8.dp))
-            Text(text = "请登录",
+            Text(
+                text = name ?: "请登录",
                 modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center)
+                textAlign = TextAlign.Center
+            )
         }
     }
 
@@ -125,7 +138,7 @@ private fun DrawerButton(
 @Preview("Drawer contents")
 @Composable
 fun PreviewAppDrawer() {
-    AppDrawer(
+    Fragment().AppDrawer(
         navigateTo = { },
         closeDrawer = { }
     )
