@@ -5,8 +5,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
@@ -26,6 +27,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.wanandroid.compose.R
 import com.wanandroid.compose.ui.Screen
+import com.wanandroid.compose.vm.AccountAction
 import com.wanandroid.compose.vm.LoginViewModel
 import com.wanandroid.compose.vm.LoginViewState
 
@@ -36,18 +38,33 @@ fun Fragment.AppDrawer(
 ) {
     val vm: LoginViewModel by remember { activityViewModels() }
     val logInfo by vm.viewState.observeAsState(LoginViewState())
-    Column(modifier = Modifier.fillMaxSize()) {
+
+    DisposableEffect(Unit, effect = {
+        vm.dispatch(AccountAction.AutoLoginAction)
+        onDispose { }
+    })
+
+    Column(modifier = Modifier.fillMaxWidth()) {
         Avatar(Modifier.clickable {
             navigateTo(Screen.Login)
         }, logInfo.loginInfo?.nickname)
     }
     Divider(color = MaterialTheme.colors.onSurface.copy(alpha = .2f))
+
     DrawerButton(
-        icon = Icons.Filled.Home,
+        icon = requireNotNull(Screen.Favorite.icon),
         label = stringResource(Screen.Favorite.resourceId),
         action = {
             navigateTo(Screen.Favorite)
             closeDrawer()
+        }
+    )
+
+    DrawerButton(
+        icon = Icons.Default.ExitToApp,
+        label = "Logout",
+        action = {
+            vm.dispatch(AccountAction.LogoutAction)
         }
     )
 

@@ -89,6 +89,8 @@ dependencies {
 
     implementation Libs.Accompanist.coil
 
+    implementation "androidx.datastore:datastore-preferences:1.0.0-alpha07"
+
 
 
 }

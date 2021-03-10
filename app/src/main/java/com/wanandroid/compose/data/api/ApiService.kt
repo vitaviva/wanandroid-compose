@@ -44,7 +44,7 @@ interface ApiService {
     suspend fun login(
         @Query("username") username: String,
         @Query("password") password: String
-    ): ApiResponse<Login>
+    ): ApiResponse<AccountInfo>
 
 
     /**

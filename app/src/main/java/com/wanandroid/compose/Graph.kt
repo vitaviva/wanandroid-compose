@@ -4,6 +4,7 @@ package com.wanandroid.compose
 import android.content.Context
 import androidx.room.Room
 import com.wanandroid.compose.data.db.WanandroidDatabase
+import com.wanandroid.compose.data.sp.WanandroidDataStore
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import okhttp3.Cache
@@ -37,5 +38,8 @@ object Graph {
             // showcase all of Room.
             .fallbackToDestructiveMigration()
             .build()
+
+
+        WanandroidDataStore.init(context)
     }
 }

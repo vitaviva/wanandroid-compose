@@ -1,6 +1,6 @@
 package com.wanandroid.compose.data.bean
 
-data class Login(
+data class AccountInfo(
     val admin: Boolean,
     val chapterTops: List<Any>,
     val collectIds: List<Int>,
