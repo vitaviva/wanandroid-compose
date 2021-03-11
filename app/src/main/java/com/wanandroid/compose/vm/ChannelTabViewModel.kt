@@ -48,11 +48,13 @@ class ChannelTabViewModel : BaseViewModel<ChannelViewState, Action>(ChannelViewS
                 emit(currentViewState.copy(curChannel = action.channel))
             }
             is ChannelAction.AddChannel -> {
-                currentViewState.copy(
-                    allChannels = currentViewState.allChannels.setChannelSelected(
-                        action.channel, true
-                    )
-                ).also { DataRepository.addToMyChannel(action.channel) }
+                emit(
+                    currentViewState.copy(
+                        allChannels = currentViewState.allChannels.setChannelSelected(
+                            action.channel, true
+                        )
+                    ).also { DataRepository.addToMyChannel(action.channel) }
+                )
             }
             is ChannelAction.RemoveChannel -> {
                 emit(
