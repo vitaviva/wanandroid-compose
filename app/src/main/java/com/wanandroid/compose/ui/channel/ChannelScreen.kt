@@ -36,9 +36,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ComposeFragment.ChannelScreen(
-    modifier: Modifier = Modifier,
-    navBackStackEntry: NavBackStackEntry,
-    navHostController: NavHostController
+    modifier: Modifier = Modifier
 ) {
     val vm: ChannelTabViewModel by remember { viewModels() }
     val viewState by vm.viewState.observeAsState(ChannelViewState())

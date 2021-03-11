@@ -10,6 +10,7 @@ import com.wanandroid.compose.vm.mvi_base.LiveCoroutineScope
 import com.wanandroid.compose.vm.mvi_base.ViewState
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 data class LoginViewState(
@@ -54,11 +55,9 @@ class LoginViewModel : BaseViewModel<LoginViewState, AccountAction>(LoginViewSta
                 }
             }
             AccountAction.AutoLoginAction -> {
-                WanandroidDataStore.getValueFlow(KEY_ACCOUNT, emptySet())
-                    .filter { it.isNotEmpty() && it.size == 2 }
-                    .collect {
-                        dispatch(AccountAction.LoginAction(it.elementAt(0), it.elementAt(1)))
-                    }
+                val loginInfo = WanandroidDataStore.getValueFlow(KEY_ACCOUNT, emptySet())
+                    .filter { it.isNotEmpty() && it.size == 2 }.first()
+                dispatch(AccountAction.LoginAction(loginInfo.elementAt(0), loginInfo.elementAt(1)))
             }
         }
 

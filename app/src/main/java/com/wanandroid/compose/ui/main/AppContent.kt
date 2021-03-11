@@ -17,7 +17,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.*
 import com.wanandroid.compose.ComposeFragment
 import com.wanandroid.compose.ui.Screen
-import com.wanandroid.compose.ui.favorite.Favorite
+import com.wanandroid.compose.ui.favorite.FavoriteScreen
 import com.wanandroid.compose.ui.home.HomeScreen
 import com.wanandroid.compose.ui.channel.ChannelScreen
 import com.wanandroid.compose.ui.login.LoginScreen
@@ -59,7 +59,7 @@ fun ComposeFragment.AppContent() {
                         AppDrawer(
                             navigateTo = {
                                 when (it) {
-                                    Screen.Favorite -> openNewTab { Favorite() }
+                                    Screen.Favorite -> openNewTab { FavoriteScreen() }
                                     Screen.Login -> openNewTab { LoginScreen() }
                                 }
                             },
@@ -73,10 +73,10 @@ fun ComposeFragment.AppContent() {
                     val modifier = remember { Modifier.padding(it) }
                     NavHost(navController, startDestination = Screen.Home.route) {
                         composable(Screen.Home.route) {
-                            HomeScreen(modifier, it, navController)
+                            HomeScreen(modifier)
                         }
                         composable(Screen.Channel.route) {
-                            ChannelScreen(modifier, it, navController)
+                            ChannelScreen(modifier)
                         }
                     }
 

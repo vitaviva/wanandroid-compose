@@ -33,7 +33,7 @@ class ChannelTabViewModel : BaseViewModel<ChannelViewState, Action>(ChannelViewS
     ) {
         when (action) {
             ChannelAction.LoadAllChannels -> {
-                val trees = requireNotNull(DataRepository.getSystem().data)
+                val trees = DataRepository.getSystem().data
                 val myChannels = trees.flatMap { it.children }.filter { it.selected }
                 val curChannel = currentViewState.curChannel ?: myChannels.first()
 

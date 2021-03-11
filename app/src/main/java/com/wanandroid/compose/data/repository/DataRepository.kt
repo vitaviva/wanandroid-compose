@@ -5,6 +5,7 @@ import com.wanandroid.compose.data.api.ApiService
 import com.wanandroid.compose.data.bean.ApiResponse
 import com.wanandroid.compose.data.bean.ChildrenBean
 import com.wanandroid.compose.data.bean.TreeBean
+import com.wanandroid.compose.utils.clearCookie
 import kotlinx.coroutines.CoroutineScope
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -36,15 +37,15 @@ object DataRepository {
         return apiService.getSystem().also {
             if (selectedChannel.isNullOrEmpty()) {
                 // add default when there is no selected
-                it.data?.first()?.children?.let {
+                it.data.first().children.let {
                     channelDao.insertAll(it)
                     selectedChannel = it
                 }
             }
             //update local selected status
-            it.data?.flatMap { it.children }?.map {
+            it.data.flatMap { it.children }.map {
                 it.apply { selected = selectedChannel.any { it2 -> it.id == it2.id } }
-            } ?: emptyList()
+            }
         }
     }
 
@@ -54,5 +55,7 @@ object DataRepository {
 
     suspend fun login(name: String, pwd: String) = apiService.login(name, pwd)
 
-    suspend fun logout() = apiService.logout()
+    suspend fun logout() = apiService.logout().also { clearCookie() }
+
+    suspend fun getCollectList(page: Int) = apiService.getCollectList(page)
 }

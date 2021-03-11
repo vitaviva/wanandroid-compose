@@ -37,9 +37,7 @@ import dev.chrisbanes.accompanist.coil.CoilImage
 
 @Composable
 fun ComposeFragment.HomeScreen(
-    modifier: Modifier = Modifier,
-    navBackStackEntry: NavBackStackEntry,
-    navHostController: NavHostController
+    modifier: Modifier = Modifier
 ) {
 
     val vm: HomeListViewModel by remember { viewModels() }

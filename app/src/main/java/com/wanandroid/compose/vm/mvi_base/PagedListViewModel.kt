@@ -13,11 +13,12 @@ abstract class PagedListViewModel<T> :
             is PagedListingAction.Refresh -> {
                 emit(currentViewState.copy(loading = true))
                 try {
+                    val res = refresh()
                     emit(
                         PagedListingViewState(
                             loading = false,
                             page = 0,
-                            data = refresh(),
+                            data = res,
                             exception = null
                         )
                     )

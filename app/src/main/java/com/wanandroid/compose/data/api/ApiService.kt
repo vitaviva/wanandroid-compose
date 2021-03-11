@@ -2,9 +2,8 @@ package com.wanandroid.compose.data.api
 
 import com.wanandroid.compose.data.bean.*
 import retrofit2.http.GET
-import retrofit2.http.Path
-import com.wanandroid.compose.data.bean.ArticleBean
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 
@@ -52,5 +51,14 @@ interface ApiService {
      */
     @GET("user/logout/json")
     suspend fun logout(): ApiResponse<Any>
+
+
+    /**
+     * 获取收藏列表
+     * @param curPage 从第0页开始
+     * @return
+     */
+    @GET("lg/collect/list/{page}/json")
+    suspend fun getCollectList(@Path("page") page: Int): ApiResponse<Page<List<ArticleBean>>>
 
 }
