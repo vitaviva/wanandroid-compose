@@ -16,15 +16,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.viewModels
 import com.github.fragivity.navigator
 import com.github.fragivity.pop
+import com.github.vitaviva.mvi.PagedListingAction
+import com.github.vitaviva.mvi.PagedListingViewState
 import com.wanandroid.compose.ComposeFragment
 import com.wanandroid.compose.R
-import com.wanandroid.compose.ui.article_list.ArticleItem
 import com.wanandroid.compose.ui.article_list.CollectionItem
 import com.wanandroid.compose.ui.theme.WanandroidcomposeTheme
 import com.wanandroid.compose.utils.PagedList
 import com.wanandroid.compose.vm.favorite.FavoriteListViewModel
-import com.wanandroid.compose.vm.mvi_base.PagedListingAction
-import com.wanandroid.compose.vm.mvi_base.PagedListingViewState
 import com.wanandroid.compose.vm.reducer.CollectAction
 
 @Composable

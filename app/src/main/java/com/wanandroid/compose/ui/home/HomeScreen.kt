@@ -18,8 +18,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavHostController
+import com.github.vitaviva.mvi.PagedListingAction
+import com.github.vitaviva.mvi.PagedListingViewState
 import com.wanandroid.compose.ComposeFragment
 import com.wanandroid.compose.components.FullScreenLoading
 import com.wanandroid.compose.components.Pager
@@ -31,8 +31,6 @@ import com.wanandroid.compose.ui.detail.DetailScreen
 import com.wanandroid.compose.utils.Fab
 import com.wanandroid.compose.utils.PagedList
 import com.wanandroid.compose.vm.HomeListViewModel
-import com.wanandroid.compose.vm.mvi_base.PagedListingAction
-import com.wanandroid.compose.vm.mvi_base.PagedListingViewState
 import com.wanandroid.compose.vm.reducer.CollectAction
 import dev.chrisbanes.accompanist.coil.CoilImage
 

@@ -1,8 +1,8 @@
 package com.wanandroid.compose.vm.favorite
 
+import com.github.vitaviva.mvi.PagedListViewModel
 import com.wanandroid.compose.data.bean.CollectBean
 import com.wanandroid.compose.data.repository.WanandroidRepository
-import com.wanandroid.compose.vm.mvi_base.PagedListViewModel
 import com.wanandroid.compose.vm.reducer.CollectAction
 import com.wanandroid.compose.vm.reducer.collectReducer
 import kotlinx.coroutines.CoroutineScope

@@ -1,10 +1,10 @@
 package com.wanandroid.compose.vm.reducer
 
+import com.github.vitaviva.mvi.Action
+import com.github.vitaviva.mvi.PagedListingViewState
+import com.github.vitaviva.mvi.Reducer
 import com.wanandroid.compose.data.bean.ArticleBean
 import com.wanandroid.compose.data.repository.WanandroidRepository
-import com.wanandroid.compose.vm.mvi_base.Action
-import com.wanandroid.compose.vm.mvi_base.PagedListingViewState
-import com.wanandroid.compose.vm.mvi_base.Reducer
 
 data class CollectAction(val id: Int, val select: Boolean) : Action
 

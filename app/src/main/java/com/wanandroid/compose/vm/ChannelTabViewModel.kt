@@ -1,11 +1,11 @@
 package com.wanandroid.compose.vm
 
+import com.github.vitaviva.mvi.Action
+import com.github.vitaviva.mvi.BaseViewModel
+import com.github.vitaviva.mvi.ViewState
 import com.wanandroid.compose.data.bean.ChildrenBean
 import com.wanandroid.compose.data.bean.TreeBean
 import com.wanandroid.compose.data.repository.WanandroidRepository
-import com.wanandroid.compose.vm.mvi_base.Action
-import com.wanandroid.compose.vm.mvi_base.BaseViewModel
-import com.wanandroid.compose.vm.mvi_base.ViewState
 
 data class ChannelViewState(
     val allChannels: List<TreeBean> = emptyList(),

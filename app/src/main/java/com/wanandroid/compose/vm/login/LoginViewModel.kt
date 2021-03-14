@@ -1,12 +1,12 @@
 package com.wanandroid.compose.vm
 
+import com.github.vitaviva.mvi.Action
+import com.github.vitaviva.mvi.BaseViewModel
+import com.github.vitaviva.mvi.ViewState
 import com.wanandroid.compose.data.bean.AccountInfo
 import com.wanandroid.compose.data.repository.WanandroidRepository
 import com.wanandroid.compose.data.sp.KEY_ACCOUNT
 import com.wanandroid.compose.data.sp.WanandroidDataStore
-import com.wanandroid.compose.vm.mvi_base.Action
-import com.wanandroid.compose.vm.mvi_base.BaseViewModel
-import com.wanandroid.compose.vm.mvi_base.ViewState
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 

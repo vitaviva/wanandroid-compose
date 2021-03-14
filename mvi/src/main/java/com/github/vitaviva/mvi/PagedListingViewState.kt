@@ -1,4 +1,4 @@
-package com.wanandroid.compose.vm.mvi_base
+package com.github.vitaviva.mvi
 
 data class PagedListingViewState<out T>(
     val loading: Boolean = false,

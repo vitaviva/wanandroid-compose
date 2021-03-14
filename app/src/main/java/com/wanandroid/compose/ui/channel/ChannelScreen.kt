@@ -22,16 +22,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavHostController
+import com.github.vitaviva.mvi.PagedListingAction
+import com.github.vitaviva.mvi.PagedListingViewState
 import com.wanandroid.compose.ComposeFragment
 import com.wanandroid.compose.components.FullScreenLoading
 import com.wanandroid.compose.data.bean.ChildrenBean
 import com.wanandroid.compose.ui.article_list.ArticleItem
 import com.wanandroid.compose.utils.PagedList
 import com.wanandroid.compose.vm.*
-import com.wanandroid.compose.vm.mvi_base.PagedListingAction
-import com.wanandroid.compose.vm.mvi_base.PagedListingViewState
 import com.wanandroid.compose.vm.reducer.CollectAction
 import kotlinx.coroutines.launch
 
