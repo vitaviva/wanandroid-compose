@@ -59,6 +59,20 @@ interface ApiService {
      * @return
      */
     @GET("lg/collect/list/{page}/json")
-    suspend fun getCollectList(@Path("page") page: Int): ApiResponse<Page<List<ArticleBean>>>
+    suspend fun getCollectList(@Path("page") page: Int): ApiResponse<Page<List<CollectBean>>>
+
+
+    /**
+     * 收藏
+     */
+    @POST("lg/collect/{id}/json")
+    suspend fun toCollect(@Path("id") id: Int): ApiResponse<Any>
+
+
+    /**
+     * 取消收藏
+     */
+    @POST("lg/uncollect_originId/{id}/json")
+    suspend fun cancelCollect(@Path("id") id: Int): ApiResponse<Any>
 
 }

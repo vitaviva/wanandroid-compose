@@ -33,6 +33,7 @@ import com.wanandroid.compose.utils.PagedList
 import com.wanandroid.compose.vm.HomeListViewModel
 import com.wanandroid.compose.vm.mvi_base.PagedListingAction
 import com.wanandroid.compose.vm.mvi_base.PagedListingViewState
+import com.wanandroid.compose.vm.reducer.CollectAction
 import dev.chrisbanes.accompanist.coil.CoilImage
 
 @Composable
@@ -119,7 +120,9 @@ private fun ComposeFragment.HomeList(
                 @Suppress("UNCHECKED_CAST")
                 BannerItem(pagerState, item as List<BannerBean>)
             is ArticleBean ->
-                ArticleItem(item)
+                ArticleItem(item) {
+                    vm.dispatch(CollectAction(item.id, it))
+                }
 
             else -> error("")
         }

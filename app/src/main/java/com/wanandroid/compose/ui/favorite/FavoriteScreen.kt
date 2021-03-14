@@ -18,13 +18,14 @@ import com.github.fragivity.navigator
 import com.github.fragivity.pop
 import com.wanandroid.compose.ComposeFragment
 import com.wanandroid.compose.R
-import com.wanandroid.compose.components.PagerState
 import com.wanandroid.compose.ui.article_list.ArticleItem
+import com.wanandroid.compose.ui.article_list.CollectionItem
 import com.wanandroid.compose.ui.theme.WanandroidcomposeTheme
 import com.wanandroid.compose.utils.PagedList
 import com.wanandroid.compose.vm.favorite.FavoriteListViewModel
 import com.wanandroid.compose.vm.mvi_base.PagedListingAction
 import com.wanandroid.compose.vm.mvi_base.PagedListingViewState
+import com.wanandroid.compose.vm.reducer.CollectAction
 
 @Composable
 fun ComposeFragment.FavoriteScreen() {
@@ -85,8 +86,11 @@ private fun ComposeFragment.FavoriteList(
         }
     ) { _, item ->
 
-        ArticleItem(item)
-
+        CollectionItem(item) {
+            vm.dispatch(CollectAction(item.originId, false)) {
+                vm.dispatch(PagedListingAction.Refresh)
+            }
+        }
     }
 
 }

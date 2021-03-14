@@ -11,7 +11,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
-object DataRepository {
+object WanandroidRepository {
 
     private val scope = CoroutineScope(Graph.mainDispatcher)
 
@@ -58,4 +58,8 @@ object DataRepository {
     suspend fun logout() = apiService.logout().also { clearCookie() }
 
     suspend fun getCollectList(page: Int) = apiService.getCollectList(page)
+
+    suspend fun collect(id: Int) = apiService.toCollect(id)
+
+    suspend fun unCollect(id: Int) = apiService.cancelCollect(id)
 }

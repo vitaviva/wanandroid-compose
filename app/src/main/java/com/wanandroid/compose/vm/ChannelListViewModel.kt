@@ -1,8 +1,10 @@
 package com.wanandroid.compose.vm
 
 import com.wanandroid.compose.data.bean.ArticleBean
-import com.wanandroid.compose.data.repository.DataRepository
+import com.wanandroid.compose.data.repository.WanandroidRepository
 import com.wanandroid.compose.vm.mvi_base.PagedListViewModel
+import com.wanandroid.compose.vm.reducer.CollectAction
+import com.wanandroid.compose.vm.reducer.collectReducer
 import kotlinx.coroutines.CoroutineScope
 
 class ChannelListViewModel(private val cid: Int) : PagedListViewModel<ArticleBean>() {
@@ -11,7 +13,12 @@ class ChannelListViewModel(private val cid: Int) : PagedListViewModel<ArticleBea
 
     override suspend fun CoroutineScope.loadMore(page: Int): List<ArticleBean> = loadPage(page)
 
-    private suspend fun loadPage(page: Int) = DataRepository.getArticlesList(page, cid).data!!.datas
+    private suspend fun loadPage(page: Int) =
+        WanandroidRepository.getArticlesList(page, cid).data.datas
 
 
+    override fun onStart(register: ReducerRegister) {
+        super.onStart(register)
+        register.addReducer(CollectAction::class, collectReducer())
+    }
 }

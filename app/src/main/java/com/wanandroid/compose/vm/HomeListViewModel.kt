@@ -1,7 +1,9 @@
 package com.wanandroid.compose.vm
 
-import com.wanandroid.compose.data.repository.DataRepository
+import com.wanandroid.compose.data.repository.WanandroidRepository
 import com.wanandroid.compose.vm.mvi_base.PagedListViewModel
+import com.wanandroid.compose.vm.reducer.CollectAction
+import com.wanandroid.compose.vm.reducer.collectReducer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 
@@ -17,9 +19,14 @@ class HomeListViewModel : PagedListViewModel<Any>() {
         return loadPage(page)
     }
 
-    private suspend fun loadPage(page: Int) = DataRepository.getArticlesList(page).data!!.datas
+    override fun onStart(register: ReducerRegister) {
+        super.onStart(register)
+        register.addReducer(CollectAction::class, collectReducer())
+    }
 
-    private suspend fun loadBanner() = DataRepository.getBanner().data!!
+    private suspend fun loadPage(page: Int) = WanandroidRepository.getArticlesList(page).data.datas
+
+    private suspend fun loadBanner() = WanandroidRepository.getBanner().data
 
 
 }

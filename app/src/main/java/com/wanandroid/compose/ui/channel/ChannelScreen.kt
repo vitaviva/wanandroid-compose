@@ -32,6 +32,7 @@ import com.wanandroid.compose.utils.PagedList
 import com.wanandroid.compose.vm.*
 import com.wanandroid.compose.vm.mvi_base.PagedListingAction
 import com.wanandroid.compose.vm.mvi_base.PagedListingViewState
+import com.wanandroid.compose.vm.reducer.CollectAction
 import kotlinx.coroutines.launch
 
 @Composable
@@ -175,7 +176,9 @@ fun ComposeFragment.ChannelList(
                             }
                         }
                     ) { _, item ->
-                        ArticleItem(item)
+                        ArticleItem(item) {
+                            vm.dispatch(CollectAction(item.id, it))
+                        }
                     }
                 }
             }

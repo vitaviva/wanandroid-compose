@@ -31,7 +31,7 @@ data class ArticleBean(
     val author: String? = null,
     val chapterId: Int = 0,
     val chapterName: String? = null,
-    val isCollect: Boolean = false,
+    val collect: Boolean = false,
     val courseId: Int = 0,
     val desc: String? = null,
     val envelopePic: String? = null,
