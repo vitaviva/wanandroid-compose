@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -13,16 +14,19 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
 import com.wanandroid.compose.ComposeFragment
 import com.wanandroid.compose.ui.Screen
+import com.wanandroid.compose.ui.channel.ChannelScreen
 import com.wanandroid.compose.ui.favorite.FavoriteScreen
 import com.wanandroid.compose.ui.home.HomeScreen
-import com.wanandroid.compose.ui.channel.ChannelScreen
 import com.wanandroid.compose.ui.login.LoginScreen
+import com.wanandroid.compose.ui.search.SearchScreen
 import com.wanandroid.compose.ui.theme.WanandroidcomposeTheme
 import kotlinx.coroutines.launch
+import mockFragment
 
 
 @Composable
@@ -49,7 +53,16 @@ fun ComposeFragment.AppContent() {
                                 IconButton(
                                     onClick = { coroutineScope.launch { scaffoldState.drawerState.open() } }
                                 ) {
-                                    Icon(Icons.Filled.Menu, "")
+                                    Icon(Icons.Default.Menu, "")
+                                }
+                            },
+                            actions = {
+                                IconButton(
+                                    onClick = {
+                                        openNewTab { SearchScreen() }
+                                    }
+                                ) {
+                                    Icon(Icons.Default.Search, "")
                                 }
                             }
                         )
@@ -82,51 +95,21 @@ fun ComposeFragment.AppContent() {
 
                 }
 
-//                val currentScreen = screenViewModel.currentScreen
-//                val visible = remember(currentScreen) { currentScreen != Screen.Main }
-//                AnimatedVisibility(
-//                    visible = visible,
-//                    enter = slideIn(
-//                        // Specifies the starting offset of the slide-in to be 1/4 of the width to the right,
-//                        // 100 (pixels) below the content position, which results in a simultaneous slide up
-//                        // and slide left.
-//                        { fullSize -> IntOffset(fullSize.width / 4, 100) },
-//                        tween(500, easing = LinearOutSlowInEasing)
-//                    ),
-//                    exit = slideOut(
-//                        // The offset can be entirely independent of the size of the content. This specifies
-//                        // a target offset 180 pixels to the left of the content, and 50 pixels below. This will
-//                        // produce a slide-left combined with a slide-down.
-//                        { IntOffset(-180, 50) },
-//                        tween(500, easing = FastOutSlowInEasing)
-//                    )
-//                ) {
-//                    // Content that needs to appear/disappear goes here:
-////                            Box(Modifier.fillMaxWidth().height(200.dp)) {}
-//                    val pre = remember() {
-//                        currentScreen
-//                    }
-////                            when (currentScreen) {
-////                                is Screen.Favorite -> Favorite()
-////                                is Screen.Main -> {
-////                                }
-////                                else -> error("")
-////                            }
-//                }
-
-//                        Crossfade(current = screenViewModel.currentScreen) {
-//                            when (it) {
-//                                is Screen.Favorite -> Favorite()
-//                                is Screen.Main -> {}
-//                                else -> error("")
-//                            }
-//                        }
             }
 
         }
+
     }
 }
 
+
+@Preview
+@Composable
+fun previewAppContent() {
+
+    mockFragment().AppContent()
+
+}
 
 @Composable
 fun BottomNavigation(currentRoute: String, navController: NavController) {
